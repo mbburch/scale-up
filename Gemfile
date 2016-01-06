@@ -15,13 +15,15 @@ gem "paperclip"
 gem "bootstrap_form"
 gem "font-awesome-rails"
 gem "therubyracer"
-gem "less-rails"
+gem 'less-rails', github: 'metaskills/less-rails', branch: 'master'
 gem "twitter-bootstrap-rails"
 gem "faker"
 gem "responders"
 gem "traceroute"
 gem "rails_12factor", group: :production
 gem "populator"
+gem 'newrelic_rpm'
+gem 'will_paginate', '~> 3.0.6'
 
 group :development, :test do
   gem "pry-rails"
@@ -37,6 +39,7 @@ end
 group :development do
   gem "better_errors"
   gem "binding_of_caller"
+  gem "bullet"
 end
 
 group :test do

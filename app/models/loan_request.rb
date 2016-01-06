@@ -21,15 +21,21 @@ class LoanRequest < ActiveRecord::Base
   end
 
   def requested_by
-    self.requested_by_date.strftime("%B %d, %Y")
+    Rails.cache.fetch("#{cache_key}/request_date") do
+      self.requested_by_date.strftime("%B %d, %Y")
+    end
   end
 
   def updated_formatted
-    self.updated_at.strftime("%B %d, %Y")
+    Rails.cache.fetch("#{cache_key}/updated") do
+      self.updated_at.strftime("%B %d, %Y")
+    end
   end
 
   def repayment_begin
-    self.repayment_begin_date.strftime("%B %d, %Y")
+    Rails.cache.fetch("#{cache_key}/repayment") do
+      self.repayment_begin_date.strftime("%B %d, %Y")
+    end
   end
 
   def funding_remaining
@@ -81,6 +87,8 @@ class LoanRequest < ActiveRecord::Base
   end
 
   def related_projects
-    (categories.flat_map(&:loan_requests) - [self]).shuffle.take(4)
+    # (categories.flat_map(&:loan_requests) - [self]).shuffle.take(4)
+    LoanRequest.joins(:categories).where(categories: {id: self.categories[0].id}).order('RANDOM()').limit(4)
+    #start with loan requests. Join categories.
   end
 end
